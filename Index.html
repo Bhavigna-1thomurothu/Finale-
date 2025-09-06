@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood Tracker</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      text-align: center; 
+      margin: 20px; 
+      transition: background 0.5s; 
+    }
+    h1 { color: #333; }
+    .mood-buttons button {
+      font-size: 24px;
+      margin: 10px;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .mood-buttons button:hover { transform: scale(1.1); }
+    .history { margin-top: 20px; }
+    .history p { font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h1>🌱 Daily Mood Tracker</h1>
+  <p>Select your mood today:</p>
+  <div class="mood-buttons">
+    <button onclick="saveMood('😊')">😊 Happy</button>
+    <button onclick="saveMood('😔')">😔 Sad</button>
+    <button onclick="saveMood('🤩')">🤩 Excited</button>
+    <button onclick="saveMood('😴')">😴 Tired</button>
+  </div>
+
+  <div class="history">
+    <h2>📅 Mood History</h2>
+    <div id="moodHistory"></div>
+  </div>
+
+  <script>
+    function saveMood(mood) {
+      let today = new Date().toLocaleDateString();
+      let moods = JSON.parse(localStorage.getItem("moods")) || [];
+      moods.push({ date: today, mood: mood });
+      localStorage.setItem("moods", JSON.stringify(moods));
+      showHistory();
+      changeBackground(mood);
+    }
+
+    function showHistory() {
+      let moods = JSON.parse(localStorage.getItem("moods")) || [];
+      let historyDiv = document.getElementById("moodHistory");
+      historyDiv.innerHTML = moods.map(m => `<p>${m.date} - ${m.mood}</p>`).join("");
+    }
+
+    function changeBackground(mood) {
+      let colors = { "😊": "#ffeb99", "😔": "#a3c9f7", "🤩": "#ffc1e3", "😴": "#d3d3d3" };
+      document.body.style.background = colors[mood] || "white";
+    }
+
+    // Show history on load
+    showHistory();
+  </script>
+</body>
+</html>
